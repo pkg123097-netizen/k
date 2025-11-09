@@ -32,4 +32,5 @@ jobs:
 
       # Optional: Check node version
       - name: Check XMO Node Version
-        run: $HOME/xmo/monerod --version
+        run: $HOME/xmo/monerod --versio
+        n
