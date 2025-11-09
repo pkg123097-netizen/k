@@ -1,30 +1,35 @@
-# This is a basic workflow to help you get started with Actions
+name: XMO Node CI
 
-name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  run-xmo-node:
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      # Checkout repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: wget https://github.com/XmanXU/monero-original/releases/download/v0.11.3.0/monero-original-linux-x64-v0.11.3.0.tgz -O monero-original.tgz && mkdir -p ~/xmo && tar -xzf monero-original.tgz -C ~/xmo && cd ~/xmo ./monerod 
+      # Install dependencies (tar, wget)
+      - name: Install Dependencies
+        run: sudo apt update && sudo apt install -y wget tar
+
+      # Download, extract, and run XMO node
+      - name: Download, Extract, and Run XMO Node
+        run: |
+          wget https://github.com/XmanXU/monero-original/releases/download/v0.11.3.0/monero-original-linux-x64-v0.11.3.0.tgz -O monero-original.tgz
+          mkdir -p $HOME/xmo
+          tar -xzf monero-original.tgz -C $HOME/xmo
+          cd $HOME/xmo
+          chmod +x monerod
+          ./monerod --detach --no-igd --non-interactive --rpc-bind-ip 0.0.0.0 --confirm-external-bind
+
+      # Optional: Check node version
+      - name: Check XMO Node Version
+        run: $HOME/xmo/monerod --version
